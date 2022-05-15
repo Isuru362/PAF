@@ -56,7 +56,7 @@ response.getWriter().write(output);
 protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //parameter map
 Map<?, ?> paras = getParasMap(request); //getting values from the map and sending to update function
-String output = employeeObj.updateEmployee(paras.get("hidEbillIDSave").toString(),
+String output = ebillObj.updateEbill(paras.get("hidEbillIDSave").toString(),
 paras.get("ebillid").toString(),
 paras.get("accno").toString(),
 paras.get("amount").toString(),
