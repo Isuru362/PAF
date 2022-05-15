@@ -22,7 +22,7 @@ $(document).on('click', '#btnSave', function (event) {
     return;
   }
 
-  // if hidEbillIDSave value is null set as POST else set as PUT
+  // if hidEbillIDSave value is null set as POST else set as PUT method
   var type = $('#hidEbillIDSave').val() == '' ? 'POST' : 'PUT';
 
   // ajax communication

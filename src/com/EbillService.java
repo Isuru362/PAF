@@ -3,7 +3,6 @@ package com;
 import java.sql.Date;//For REST Service
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -11,64 +10,67 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;//For JSON
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;//For XML
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.parser.Parser;
-import model.Employee;//Insert method
-@POST
-@Path("/")
-@Consumes(MediaType.APPLICATION_FORM_URLENCODED) //Admin sending details
-@Produces(MediaType.TEXT_PLAIN) //Client getting back details
-public String insertEmployee(@FormParam("employeeid") String employeeid,
-@FormParam("employeename") String employeename,
-@FormParam("employeedob") String employeedob,
-@FormParam("employeeaddress") String employeeaddress,
-@FormParam("employeegender") String employeegender,
-@FormParam("employeesalary") String employeesalary)
-{
-//Execute output
-String output = employeeObj.insertEmployee(employeename, employeedob, employeeaddress, employeegender, employeesalary);
-return output;
-}//Read method
-@GET
-@Path("/")
-@Produces(MediaType.TEXT_HTML)
-public String readEmployees()
-{
-return employeeObj.readEmployees();
-}//Update method
-@PUT
-@Path("/")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.TEXT_PLAIN)
-public String updateEmployee(String employeeData)
-{
-//Convert the input string to a JSON object
-JsonObject employeeObject = new JsonParser().parse(employeeData).getAsJsonObject();
-//Read the values from the JSON object
-int employeeid = employeeObject.get("employeeid").getAsInt();
-String employeename = employeeObject.get("employeename").getAsString();
-String employeedob = employeeObject.get("employeedob").getAsString();
-String employeeaddress = employeeObject.get("employeeaddress").getAsString();
-String employeegender = employeeObject.get("employeegender").getAsString();
-String employeesalary = employeeObject.get("employeesalary").getAsString();//Execute output
-String output = employeeObj.updateEmployee(employeeid, employeename, employeedob, employeeaddress, employeegender, employeesalary);
-return output;
-//Delete method
-@DELETE
-@Path("/")
-@Consumes(MediaType.APPLICATION_XML)
-@Produces(MediaType.TEXT_PLAIN)
-public String deleteEmployee(String employeeData)
-{
-//Convert the input string to an XML document
-Document doc = Jsoup.parse(employeeData, "", Parser.xmlParser());
-//Read the value from the element <employeeid>
-String employeeid = doc.select("employeeid").text();
-String output = employeeObj.deleteEmployee(employeeid);
-return output;
-}
+import model.Ebill;//Insert method
+
+@Path("ebills")
+public class EbillResource {
+
+EbillRepository repo = new EbillRepository();
+	
+	@GET
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	//get all the ebills data
+	public List<Ebill> getEbills() {
+		
+		System.out.println("get Ebills called...");
+
+		return repo.getEbills();
+	}
+	
+	@GET
+	@Path("ebill/{id}") 
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	//get a specific ebill
+	public Ebill getEbill(@PathParam("id") int id) {
+
+		return repo.getEbill(id);
+	}
+	
+	@POST 
+	@Path("ebill")
+	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+	//inserting data
+	public Ebill createEbill(Ebill a1) {
+		System.out.println(a1);
+		repo.create(a1);
+		return a1;
+	}
+	
+	
+	@PUT
+	@Path("ebill")
+	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+	//inserting data
+	public Ebill updateEbill(Ebill a1) {
+		System.out.println(a1);
+		if(repo.getEbill(a1.getBillId()).getBillId()==0) {
+			repo.create(a1);
+			
+		}else {
+			repo.update(a1);
+		}
+		
+		return a1;
+	}
+	
+	@DELETE
+	@Path("ebill/{id}")
+	public Ebill killEbill(@PathParam("id") int id) {
+		Ebill  a = repo.getEbill(id);
+		
+		if(a.getBillId()!=0)
+			repo.delete(id);
+		return a;
+	}
 }
 
