@@ -15,7 +15,7 @@ import java.util.Scanner;
 */@WebServlet("/EbillsAPI")
 public class EbillsAPI extends HttpServlet {
 private static final long serialVersionUID = 1L;
-Ebill employeeObj = new Ebill(); //convert request parameters to the map
+Ebill ebillObj = new Ebill(); //convert request parameters to the map
 private static Map<String, String> getParasMap(HttpServletRequest request) {
 Map<String, String> map = new HashMap<String, String>(); try {
 Scanner scanner = new Scanner(request.getInputStream(), "UTF-8");
